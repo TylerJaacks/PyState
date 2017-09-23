@@ -1,3 +1,6 @@
+import json
+import requests
+
 isu_cyride_prediction_endpoint = "http://webservices.nextbus.com/service/publicJSONFeed?a=cyride&command=predictions&stopId"
 isu_dining_menu_endpoint = "http://apps.dining.iastate.edu/mystate-api/1.0/menu/"
 isu_dining_information = "http://apps.dining.iastate.edu/mystate-api/1.0/"
@@ -25,5 +28,10 @@ isu_dining_locations = {1 : "Conversations Dining",
 	28 : "Global Caf\u00e9",
 	31 : "Friley Windows"}
 
-for key, value in isu_dining_locations.items() :
-    print (key, value)
+response = requests.get("http://apps.dining.iastate.edu/mystate-api/1.0/menu/4")
+
+data = response.json()
+
+print(type(data))
+
+print(data)
