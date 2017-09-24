@@ -1,5 +1,5 @@
+import urllib.request
 import json
-import requests
 
 isu_cyride_prediction_endpoint = "http://webservices.nextbus.com/service/publicJSONFeed?a=cyride&command=predictions&stopId"
 isu_dining_menu_endpoint = "http://apps.dining.iastate.edu/mystate-api/1.0/menu/"
@@ -28,10 +28,26 @@ isu_dining_locations = {1 : "Conversations Dining",
 	28 : "Global Caf\u00e9",
 	31 : "Friley Windows"}
 
-response = requests.get("http://apps.dining.iastate.edu/mystate-api/1.0/menu/4")
+def remove_duplicates(values):
+    output = []
+    seen = set()
+    for value in values:
+        if value not in seen:
+            output.append(value)
+            seen.add(value)
+    return output
 
-data = response.json()
+request = urllib.request.Request("http://apps.dining.iastate.edu/mystate-api/1.0/menu/4") 
+response = urllib.request.urlopen(request)
 
-print(type(data))
+data = json.loads(response.read())
 
-print(data)
+stations = []
+fooditems = []
+
+for object in data:
+	stations.append(object["station"])
+
+stations = remove_duplicates(stations)
+
+print(stations)
