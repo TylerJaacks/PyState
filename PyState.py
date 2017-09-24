@@ -1,10 +1,34 @@
 import urllib.request
 import json
 
-isu_cyride_prediction_endpoint = "http://webservices.nextbus.com/service/publicJSONFeed?a=cyride&command=predictions&stopId"
-isu_dining_menu_endpoint = "http://apps.dining.iastate.edu/mystate-api/1.0/menu/"
-isu_dining_information = "http://apps.dining.iastate.edu/mystate-api/1.0/"
+from enum import Enum
 
+# Dining locations enums.
+class DiningLocations(Enum):
+	CONVERSATIONS_DINING = 1
+	UNION_DRIVE_MARKETPLACE = 4
+	WEST_SIDE_MARKET = 5
+	SOUTH_SIDE_MARKET = 7
+	EAST_SIDE_MARKET = 10
+	BUSINESS_CAFE = 11
+	CLYDES_FRESH_EXPRESS = 12
+	COURTYARD_CAFE = 13
+	DESIGN_CAFE = 14
+	GENTLE_DOCTOR_CAFE = 15
+	HAWTHORN = 16
+	HUB_GRILL_CAFE = 17
+	CARIBOU_COFFEE = 18
+	ABE_HARVEST_CAFE = 30
+	FROOTS = 26
+	MEMORIAL_UNION_FOOD_COURT = 19
+	BOOKENDS_CAFE = 21
+	MU_MARKET_CAFE = 21
+	SEASONS_MARKETPLACE = 24
+	STORMS_DINING = 25
+	GLOBAL_CAFE = 28
+	FILEY_WINDOWS = 31
+
+# Dining locations names.
 isu_dining_locations = {1 : "Conversations Dining", 
 	4 : "Union Drive Marketplace",
 	5 : "West Side Market",
@@ -28,26 +52,45 @@ isu_dining_locations = {1 : "Conversations Dining",
 	28 : "Global Caf\u00e9",
 	31 : "Friley Windows"}
 
+# MyState and NextBus endpoints.
+isu_cyride_prediction_endpoint = "http://webservices.nextbus.com/service/publicJSONFeed?a=cyride&command=predictions&stopId"
+isu_dining_menu_endpoint = "http://apps.dining.iastate.edu/mystate-api/1.0/menu/"
+isu_dining_information = "http://apps.dining.iastate.edu/mystate-api/1.0/"
+
+# Remove duplicates in the lists.
 def remove_duplicates(values):
     output = []
     seen = set()
+    
     for value in values:
         if value not in seen:
             output.append(value)
+            
             seen.add(value)
     return output
 
-request = urllib.request.Request("http://apps.dining.iastate.edu/mystate-api/1.0/menu/4") 
-response = urllib.request.urlopen(request)
+# Retrieves JSON from a REST web service.
+def get_JSON(url):
+	request = urllib.request.Request(url) 
+	response = urllib.request.urlopen(request)
+	
+	return json.loads(response.read())
 
-data = json.loads(response.read())
+# Gets food items from a specific dining location.
+def get_food_items(place):
+	food_items = []
 
-stations = []
-fooditems = []
+	print(place.value)
 
-for object in data:
-	stations.append(object["station"])
+	data = get_JSON("http://apps.dining.iastate.edu/mystate-api/1.0/menu/" + str(place.value))
 
-stations = remove_duplicates(stations)
+	for object in data:
+		food_items.append(object["item_main"])
 
-print(stations)
+	food_items = remove_duplicates(food_items)
+
+	print(*food_items, sep='\n')
+
+	return food_items
+
+get_food_items(DiningLocations.HAWTHORN)
