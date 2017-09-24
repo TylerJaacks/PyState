@@ -29,7 +29,8 @@ class DiningLocations(Enum):
 	FILEY_WINDOWS = 31
 
 # Dining locations names.
-isu_dining_locations = {1 : "Conversations Dining", 
+isu_dining_locations = {
+	1 : "Conversations Dining", 
 	4 : "Union Drive Marketplace",
 	5 : "West Side Market",
 	7 : "South Side Market",
@@ -50,7 +51,8 @@ isu_dining_locations = {1 : "Conversations Dining",
 	24 : "Seasons Marketplace",
 	25 : "Storms Dining",
 	28 : "Global Caf\u00e9",
-	31 : "Friley Windows"}
+	31 : "Friley Windows"
+}
 
 # MyState and NextBus endpoints.
 isu_cyride_prediction_endpoint = "http://webservices.nextbus.com/service/publicJSONFeed?a=cyride&command=predictions&stopId"
@@ -80,9 +82,7 @@ def get_JSON(url):
 def get_food_items(place):
 	food_items = []
 
-	print(place.value)
-
-	data = get_JSON("http://apps.dining.iastate.edu/mystate-api/1.0/menu/" + str(place.value))
+	data = get_JSON(isu_dining_menu_endpoint + str(place.value))
 
 	for object in data:
 		food_items.append(object["item_main"])
@@ -93,4 +93,13 @@ def get_food_items(place):
 
 	return food_items
 
+def get_bus_times(stop_id):
+	times = []
+
+	data = get_JSON(isu_cyride_prediction_endpoint + str(stop_id))
+
+	print(data)
+
 get_food_items(DiningLocations.HAWTHORN)
+
+get_bus_times(1172)
