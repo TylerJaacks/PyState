@@ -28,6 +28,13 @@ class DiningLocations(Enum):
 	GLOBAL_CAFE = 28
 	FILEY_WINDOWS = 31
 
+class MealTypes(Enum):
+    BREAKFAST = "Breakfast"
+    LUNCH = "Lunch"
+    DINNER = "Dinner"
+    LATE_NIGHT = "Late Night"
+	CONTINOUS_SERVICE = "Continous Services" # TODO Fix spelling.
+
 # Dining locations names.
 isu_dining_locations = {
 	1 : "Conversations Dining", 
@@ -56,6 +63,7 @@ isu_dining_locations = {
 
 # MyState and NextBus endpoints.
 isu_cyride_prediction_endpoint = "http://webservices.nextbus.com/service/publicJSONFeed?a=cyride&command=predictions&stopId"
+isu_dining_hours_endpoint = "http://apps.dining.iastate.edu/mystate-api/1.0/hours/"
 isu_dining_menu_endpoint = "http://apps.dining.iastate.edu/mystate-api/1.0/menu/"
 isu_dining_information = "http://apps.dining.iastate.edu/mystate-api/1.0/"
 
@@ -80,12 +88,28 @@ def get_JSON(url):
 
 # Gets food items from a specific dining location.
 def get_food_items(place):
+    food_items = []
+    
+    data = get_JSON(isu_dining_menu_endpoint + str(place.value))
+    
+    for object in data:
+        food_items.append(object["item_main"])
+
+        food_items = remove_duplicates(food_items)
+
+        print(*food_items, sep='\n')
+
+    return food_items
+
+# Gets food items from a specific dining location, and specific time.
+def get_food_items(place, type):
 	food_items = []
 
 	data = get_JSON(isu_dining_menu_endpoint + str(place.value))
 
 	for object in data:
-		food_items.append(object["item_main"])
+        if object["event"] == str(type.value):
+        food_items.append(object["item_main"])
 
 	food_items = remove_duplicates(food_items)
 
@@ -93,6 +117,12 @@ def get_food_items(place):
 
 	return food_items
 
+def get_dining_hours(place, type):
+    data = get_JSON(isu_dining_hours_endpoint + str(place.value))
+
+    return data[str(type.value)]
+
+# TODO Get bus times.
 def get_bus_times(stop_id):
 	times = []
 
@@ -101,5 +131,5 @@ def get_bus_times(stop_id):
 	print(data)
 
 get_food_items(DiningLocations.HAWTHORN)
-
-get_bus_times(1172)
+get_food_items(DiningLocations.HAWTHORN, MealTypes.LUNCH)
+get_dining_hours(DiningLocations.HAWTHORN, MealTypes.LUNCH)
