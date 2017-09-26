@@ -109,7 +109,7 @@ def get_food_items(place, type):
 
 	for object in data:
         if object["event"] == str(type.value):
-        food_items.append(object["item_main"])
+        	food_items.append(object["item_main"])
 
 	food_items = remove_duplicates(food_items)
 
