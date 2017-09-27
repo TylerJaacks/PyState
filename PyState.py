@@ -117,6 +117,7 @@ def get_food_items(place, type):
 
 	return food_items
 
+# Gets dining hours for a specific dining location.
 def get_dining_hours(place, type):
     data = get_JSON(isu_dining_hours_endpoint + str(place.value))
 
