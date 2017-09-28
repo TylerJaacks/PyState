@@ -30,11 +30,11 @@ class DiningLocations(Enum):
 
 # Meal Types.
 class MealTypes(Enum):
-    BREAKFAST = "Breakfast"
-    LUNCH = "Lunch"
-    DINNER = "Dinner"
-    LATE_NIGHT = "Late Night"
-    CONTINUOUS_SERVICE = "Continuous Services"
+	BREAKFAST = "Breakfast"
+	LUNCH = "Lunch"
+	DINNER = "Dinner"
+	LATE_NIGHT = "Late Night"
+	CONTINUOUS_SERVICE = "Continuous Services"
 
 # Dining locations names.
 isu_dining_locations = {
@@ -70,15 +70,15 @@ isu_dining_information = "http://apps.dining.iastate.edu/mystate-api/1.0/"
 
 # Remove duplicates in the lists.
 def remove_duplicates(values):
-    output = []
-    seen = set()
-    
-    for value in values:
-        if value not in seen:
-            output.append(value)
-            
-            seen.add(value)
-    return output
+	output = []
+	seen = set()
+	
+	for value in values:
+		if value not in seen:
+			output.append(value)
+			
+			seen.add(value)
+	return output
 
 # Removes invalid characters from menus.
 def remove_invalids(values):
@@ -99,19 +99,19 @@ def get_JSON(url):
 
 # Gets all food items from a specific dining location.
 def get_complete_menu(place):
-    food_items = []
-    
-    data = get_JSON(isu_dining_menu_endpoint + str(place.value))
-    
-    for object in data:
-        food_items.append(object["item_main"])
+	food_items = []
+	
+	data = get_JSON(isu_dining_menu_endpoint + str(place.value))
+	
+	for object in data:
+		food_items.append(object["item_main"])
 
-        food_items = remove_duplicates(food_items)
-        food_items = remove_invalids(food_items)
+		food_items = remove_duplicates(food_items)
+		food_items = remove_invalids(food_items)
 
-        print(*food_items, sep='\n')
+		print(*food_items, sep='\n')
 
-    return food_items
+	return food_items
 
 # Gets food items from a specific dining location, and specific time.
 def get_food_items(place, type):
@@ -133,20 +133,20 @@ def get_food_items(place, type):
 
 # Gets dining hours for a specific dining location.
 def get_dining_hours(place, type):
-    data = get_JSON(isu_dining_hours_endpoint + str(place.value))
-    hours = ""
+	data = get_JSON(isu_dining_hours_endpoint + str(place.value))
+	hours = ""
 
-    for object in data:
-        if object["name"] == str(type.value):
-            hours = object["hours"]
+	for object in data:
+		if object["name"] == str(type.value):
+			hours = object["hours"]
 
-    # TODO Does not work
-    if " " in hours == True:
-        hours == "None"
+	# TODO Does not work
+	if " " in hours == True:
+		hours == "None"
 
-    print(hours)
+	print(hours)
 
-    return hours
+	return hours
 
 # TODO Get bus times.
 def get_bus_times(stop_id):
@@ -155,7 +155,3 @@ def get_bus_times(stop_id):
 	data = get_JSON(isu_cyride_prediction_endpoint + str(stop_id))
 
 	print(data)
-
-#get_complete_menu(DiningLocations.CONVERSATIONS_DINING)
-#get_food_items(DiningLocations.CONVERSATIONS_DINING, MealTypes.LUNCH)
-#get_dining_hours(DiningLocations.CONVERSATIONS_DINING, MealTypes.LUNCH)
