@@ -80,6 +80,16 @@ def remove_duplicates(values):
             seen.add(value)
     return output
 
+# Removes invalid characters from menus.
+def remove_invalids(values):
+	output = []
+
+	for value in values:
+		if value != "-":
+			output.append(value)
+
+	return output
+
 # Retrieves JSON from a REST web service.
 def get_JSON(url):
 	request = urllib.request.Request(url) 
@@ -87,7 +97,7 @@ def get_JSON(url):
 	
 	return json.loads(response.read())
 
-# Gets food items from a specific dining location.
+# Gets all food items from a specific dining location.
 def get_complete_menu(place):
     food_items = []
     
@@ -97,6 +107,7 @@ def get_complete_menu(place):
         food_items.append(object["item_main"])
 
         food_items = remove_duplicates(food_items)
+        food_items = remove_invalids(food_items)
 
         print(*food_items, sep='\n')
 
@@ -112,9 +123,9 @@ def get_food_items(place, type):
 		if object["event"] == str(type.value):
 			food_items.append(object["item_main"])
 
-
-
+	# TODO Does not remove duplicates.
 	food_items = remove_duplicates(food_items)
+	food_items = remove_invalids(food_items)
 
 	print(*food_items, sep='\n')
 
@@ -123,8 +134,19 @@ def get_food_items(place, type):
 # Gets dining hours for a specific dining location.
 def get_dining_hours(place, type):
     data = get_JSON(isu_dining_hours_endpoint + str(place.value))
+    hours = ""
 
-    return data[str(type.value)]
+    for object in data:
+        if object["name"] == str(type.value):
+            hours = object["hours"]
+
+    # TODO Does not work
+    if " " in hours == True:
+        hours == "None"
+
+    print(hours)
+
+    return hours
 
 # TODO Get bus times.
 def get_bus_times(stop_id):
@@ -135,5 +157,5 @@ def get_bus_times(stop_id):
 	print(data)
 
 #get_complete_menu(DiningLocations.CONVERSATIONS_DINING)
-get_food_items(DiningLocations.HAWTHORN, MealTypes.BREAKFAST)
-#get_dining_hours(DiningLocations.HAWTHORN, MealTypes.LUNCH)
+#get_food_items(DiningLocations.CONVERSATIONS_DINING, MealTypes.LUNCH)
+#get_dining_hours(DiningLocations.CONVERSATIONS_DINING, MealTypes.LUNCH)
