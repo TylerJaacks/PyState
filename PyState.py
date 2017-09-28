@@ -28,12 +28,13 @@ class DiningLocations(Enum):
 	GLOBAL_CAFE = 28
 	FILEY_WINDOWS = 31
 
+# Meal Types.
 class MealTypes(Enum):
     BREAKFAST = "Breakfast"
     LUNCH = "Lunch"
     DINNER = "Dinner"
     LATE_NIGHT = "Late Night"
-	CONTINOUS_SERVICE = "Continous Services" # TODO Fix spelling.
+    CONTINUOUS_SERVICE = "Continuous Services"
 
 # Dining locations names.
 isu_dining_locations = {
@@ -87,7 +88,7 @@ def get_JSON(url):
 	return json.loads(response.read())
 
 # Gets food items from a specific dining location.
-def get_food_items(place):
+def get_complete_menu(place):
     food_items = []
     
     data = get_JSON(isu_dining_menu_endpoint + str(place.value))
@@ -108,8 +109,10 @@ def get_food_items(place, type):
 	data = get_JSON(isu_dining_menu_endpoint + str(place.value))
 
 	for object in data:
-        if object["event"] == str(type.value):
-        	food_items.append(object["item_main"])
+		if object["event"] == str(type.value):
+			food_items.append(object["item_main"])
+
+
 
 	food_items = remove_duplicates(food_items)
 
@@ -131,6 +134,6 @@ def get_bus_times(stop_id):
 
 	print(data)
 
-get_food_items(DiningLocations.HAWTHORN)
-get_food_items(DiningLocations.HAWTHORN, MealTypes.LUNCH)
-get_dining_hours(DiningLocations.HAWTHORN, MealTypes.LUNCH)
+#get_complete_menu(DiningLocations.CONVERSATIONS_DINING)
+get_food_items(DiningLocations.HAWTHORN, MealTypes.BREAKFAST)
+#get_dining_hours(DiningLocations.HAWTHORN, MealTypes.LUNCH)
