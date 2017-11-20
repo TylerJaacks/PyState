@@ -1,5 +1,7 @@
 import PyState
 
-PyState.get_complete_menu(PyState.DiningLocations.CONVERSATIONS_DINING)
+# Get Food Items for Lunch at Conversations.
 PyState.get_food_items(PyState.DiningLocations.CONVERSATIONS_DINING, PyState.MealTypes.LUNCH)
-PyState.get_dining_hours(PyState.DiningLocations.CONVERSATIONS_DINING, PyState.MealTypes.LUNCH)
+
+# Get Dining Hours for Lunch at Conversations.
+PyState.get_dining_hours(PyState.DiningLocations.CONVERSATIONS_DINING, PyState.MealTypes.DINNER)
