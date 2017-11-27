@@ -34,6 +34,7 @@ class MealTypes(Enum):
 	LUNCH = "Lunch"
 	DINNER = "Dinner"
 	LATE_NIGHT = "Late Night"
+	BAR_ONLY = "Deli/Salad Bar Only"
 	CONTINUOUS_SERVICE = "Continuous Services"
 
 # Laundry Rooms
@@ -56,7 +57,7 @@ class LaundryRoomLocations(Enum):
 	MAPLE = "Maple"
 
 # MyState and NextBus endpoints.
-isu_cyride_prediction_endpoint = "http://webservices.nextbus.com/service/publicJSONFeed?a=cyride&command=predictions&stopId"
+isu_cyride_prediction_endpoint = "http://webservices.nextbus.com/service/publicJSONFeed?a=cyride&command=predictions&stopId="
 isu_dining_hours_endpoint = "http://apps.dining.iastate.edu/mystate-api/1.0/hours/"
 isu_dining_menu_endpoint = "http://apps.dining.iastate.edu/mystate-api/1.0/menu/"
 isu_dining_information_endpoint = "http://apps.dining.iastate.edu/mystate-api/1.0/"
@@ -125,8 +126,15 @@ def get_dining_hours(place, type):
 
 	return hours
 
-def get_laundry(room):
+def get_laundry(building):
+	data = get_JSON(isu_laundry_endpoint + str(building.value))
 	
+	for object in data["location"]:
+		location = data["location"]
+
+		for object in location["rooms"]:
+			print(location["rooms"])
+			print("\n")
 
 # TODO Get bus times.
 def get_bus_times(stop_id):
@@ -134,4 +142,4 @@ def get_bus_times(stop_id):
 
 	data = get_JSON(isu_cyride_prediction_endpoint + str(stop_id))
 
-	print(data)
+	print("Stubbed!")
