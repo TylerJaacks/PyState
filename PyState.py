@@ -126,15 +126,16 @@ def get_dining_hours(place, type):
 
 	return hours
 
-def get_laundry(building):
+def get_laundry(building, port):
 	data = get_JSON(isu_laundry_endpoint + str(building.value))
 	
-	for object in data["location"]:
-		location = data["location"]
-
-		for object in location["rooms"]:
-			print(location["rooms"])
-			print("\n")
+	for object in data["location"]["rooms"][0]["machines"]:
+		#print(object)
+		print(object["port"])
+		print(object["description"])
+		print(object["status"])
+		print(object["timeRemaining"])
+		print("\n")
 
 # TODO Get bus times.
 def get_bus_times(stop_id):
