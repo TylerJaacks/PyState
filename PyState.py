@@ -100,7 +100,12 @@ def get_food_items(place, type):
 
 	for object in data:
 		if object["event"] == str(type.value):
-			food_items.append(object["item_main"])
+			item = object["item_main"]
+			station = object["station"]
+			#final = item + " - " + station
+			final = item
+
+			food_items.append(final)
 
 	# TODO Does not remove duplicates.
 	food_items = remove_duplicates(food_items)
@@ -126,7 +131,7 @@ def get_dining_hours(place, type):
 
 	return hours
 
-def get_laundry(building, port):
+def get_laundry(building):
 	data = get_JSON(isu_laundry_endpoint + str(building.value))
 	
 	for object in data["location"]["rooms"][0]["machines"]:
