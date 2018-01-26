@@ -27,6 +27,7 @@ class DiningLocations(Enum):
 	STORMS_DINING = 25
 	GLOBAL_CAFE = 28
 	FILEY_WINDOWS = 31
+	LANCE_AND_ELLIES = 32
 
 # Meal Types
 class MealTypes(Enum):
